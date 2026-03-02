@@ -1,0 +1,68 @@
+{
+  "$schema": "Merged from Light_Mode.tokens.json + Light_Mode.tokens-1.json",
+  "fg (Foreground-Text)": {
+    "primary":   { "$type": "color", "$value": { "hex": "#181B25", "alpha": 1 }, "$alias": "color/neutral/neutral 900" },
+    "secondary": { "$type": "color", "$value": { "hex": "#525866", "alpha": 1 }, "$alias": "color/neutral/neutral 600" },
+    "tertiary":  { "$type": "color", "$value": { "hex": "#717784", "alpha": 1 }, "$alias": "color/neutral/neutral 500" },
+    "disabled":  { "$type": "color", "$value": { "hex": "#99A0AE", "alpha": 1 }, "$alias": "color/neutral/neutral 400" },
+    "inverse":   { "$type": "color", "$value": { "hex": "#FFFFFF", "alpha": 1 }, "$alias": "color/neutral/neutral 0" },
+    "brand":     { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "link":      { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "success":   { "$type": "color", "$value": { "hex": "#178C4E", "alpha": 1 }, "$alias": "color/Green (Success)/Green 700" },
+    "error":     { "$type": "color", "$value": { "hex": "#D02533", "alpha": 1 }, "$alias": "color/Red (Error)/Red 700" },
+    "warning":   { "$type": "color", "$value": { "hex": "#D05E25", "alpha": 1 }, "$alias": "color/Orange (Warning)/Orange 700" },
+    "info":      { "$type": "color", "$value": { "hex": "#2597D0", "alpha": 1 }, "$alias": "color/Sky (Info)/Sky 700" }
+  },
+  "bg (Background)": {
+    "primary":        { "$type": "color", "$value": { "hex": "#FFFFFF", "alpha": 1 }, "$alias": "color/neutral/neutral 0" },
+    "secondary":      { "$type": "color", "$value": { "hex": "#F2F5F8", "alpha": 1 }, "$alias": "color/neutral/neutral 100" },
+    "tertiary":       { "$type": "color", "$value": { "hex": "#E1E4EA", "alpha": 1 }, "$alias": "color/neutral/neutral 200" },
+    "disabled":       { "$type": "color", "$value": { "hex": "#CACFD8", "alpha": 1 }, "$alias": "color/neutral/neutral 300" },
+    "inverse":        { "$type": "color", "$value": { "hex": "#181B25", "alpha": 1 }, "$alias": "color/neutral/neutral 900" },
+    "brand":          { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "link":           { "$type": "color", "$value": { "hex": "#178C7D", "alpha": 1 }, "$alias": "color/Teal/Teal 700" },
+    "success":        { "$type": "color", "$value": { "hex": "#178C4E", "alpha": 1 }, "$alias": "color/Green (Success)/Green 700" },
+    "success-subtle": { "$type": "color", "$value": { "hex": "#E0FAEC", "alpha": 1 }, "$alias": "color/Green (Success)/Green 50" },
+    "error":          { "$type": "color", "$value": { "hex": "#FB3748", "alpha": 1 }, "$alias": "color/Red (Error)/Red 500" },
+    "error-subtle":   { "$type": "color", "$value": { "hex": "#FFEBEC", "alpha": 1 }, "$alias": "color/Red (Error)/Red 50" },
+    "warning-subtle": { "$type": "color", "$value": { "hex": "#FFF1EB", "alpha": 1 }, "$alias": "color/Orange (Warning)/Orange 50" },
+    "info-subtle":    { "$type": "color", "$value": { "hex": "#EBF8FF", "alpha": 1 }, "$alias": "color/Sky (Info)/Sky 50" }
+  },
+  "border": {
+    "primary":   { "$type": "color", "$value": { "hex": "#E1E4EA", "alpha": 1 }, "$alias": "color/neutral/neutral 200" },
+    "secondary": { "$type": "color", "$value": { "hex": "#CACFD8", "alpha": 1 }, "$alias": "color/neutral/neutral 300" },
+    "disabled":  { "$type": "color", "$value": { "hex": "#E1E4EA", "alpha": 1 }, "$alias": "color/neutral/neutral 200" },
+    "focus":     { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "brand":     { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "success":   { "$type": "color", "$value": { "hex": "#1FC16B", "alpha": 1 }, "$alias": "color/Green (Success)/Green 500" },
+    "error":     { "$type": "color", "$value": { "hex": "#FB3748", "alpha": 1 }, "$alias": "color/Red (Error)/Red 500" },
+    "divider":   { "$type": "color", "$value": { "hex": "#E1E4EA", "alpha": 1 }, "$alias": "color/neutral/neutral 200" }
+  },
+  "Icon": {
+    "primary":   { "$type": "color", "$value": { "hex": "#2B303B", "alpha": 1 }, "$alias": "color/neutral/neutral 700" },
+    "secondary": { "$type": "color", "$value": { "hex": "#717784", "alpha": 1 }, "$alias": "color/neutral/neutral 500" },
+    "disabled":  { "$type": "color", "$value": { "hex": "#CACFD8", "alpha": 1 }, "$alias": "color/neutral/neutral 300" },
+    "inverse":   { "$type": "color", "$value": { "hex": "#FFFFFF", "alpha": 1 }, "$alias": "color/neutral/neutral 0" },
+    "brand":     { "$type": "color", "$value": { "hex": "#1DAF9C", "alpha": 1 }, "$alias": "color/Teal/Teal 600" },
+    "success":   { "$type": "color", "$value": { "hex": "#1FC16B", "alpha": 1 }, "$alias": "color/Green (Success)/Green 500" },
+    "error":     { "$type": "color", "$value": { "hex": "#FB3748", "alpha": 1 }, "$alias": "color/Red (Error)/Red 500" },
+    "Warning":   { "$type": "color", "$value": { "hex": "#FF8447", "alpha": 1 }, "$alias": "color/Orange (Warning)/Orange 500" }
+  },
+  "status": {
+    "healthy":      { "$type": "color", "$value": { "hex": "#1FC16B", "alpha": 1 }, "$alias": "color/Green (Success)/Green 500" },
+    "unhealthy":    { "$type": "color", "$value": { "hex": "#FB3748", "alpha": 1 }, "$alias": "color/Red (Error)/Red 500" },
+    "disconnected": { "$type": "color", "$value": { "hex": "#525866", "alpha": 1 }, "$alias": "color/neutral/neutral 600" },
+    "allocated":    { "$type": "color", "$value": { "hex": "#47C2FF", "alpha": 1 }, "$alias": "color/Sky (Info)/Sky 500" },
+    "used":         { "$type": "color", "$value": { "hex": "#18658B", "alpha": 1 }, "$alias": "color/Sky (Info)/Sky 900" }
+  },
+  "text": {
+    "label":   { "$type": "number", "$value": 12, "$alias": "Typography/FontSize/sm" },
+    "body":    { "$type": "number", "$value": 14, "$description": "ANTD-H1", "$alias": "Typography/FontSize/md" },
+    "title":   { "$type": "number", "$value": 16, "$alias": "Typography/FontSize/lg" },
+    "heading": { "$type": "number", "$value": 20, "$description": "ANTD-H2", "$alias": "Typography/FontSize/xl" },
+    "display": { "$type": "number", "$value": 24, "$description": "ANTD-H3", "$alias": "Typography/FontSize/2xl" }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Light Mode (merged)"
+  }
+}

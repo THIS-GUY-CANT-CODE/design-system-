@@ -1,0 +1,40 @@
+FIX FILE NAMING
+
+Rename Templetes.svg to Templates.svg and update all imports that reference it. Rename 1CreateADataVolume.tsx to CreateDataVolumeImport.tsx. Rename 10ImportFromObsFileSelection.tsx to ImportFromObsFileSelection.tsx. Rename Frame2121453250.tsx to a descriptive semantic name based on what the component actually renders. Rename Frame_26.svg, Frame_1000003783.svg, and Frame_1000003782.svg to descriptive names based on their visual content. Delete Workspace_Module_Card_-_Old.svg and update any references to use Workspace_Module_Card.svg instead. Enforce consistent naming conventions: PascalCase for all component files and kebab-case for utility files.
+
+RESOLVE DUPLICATE COMPONENTS
+
+Remove atoms/Toggle/Toggle.tsx and atoms/Toggle/index.tsx entirely. The canonical Toggle should be the one in ui/toggle.tsx (it will be relocated in a follow-up restructure). Ensure all imports across the project reference the single Toggle source. Consolidate NotFound.tsx from app/components/pages/ and UnknownPage.tsx from src/pages/ into a single NotFoundPage.tsx in src/pages/. Update routes.ts to reference the consolidated component.
+
+FIX UTILITY FILE PLACEMENT
+
+Move app/components/ui/utils.ts to src/lib/utils.ts and update every import across the project. Move app/components/ui/use-mobile.ts to src/hooks/use-mobile.ts and update every import. These are not UI components and must not live inside the component directory.
+
+CONSOLIDATE STYLE FILES
+
+In src/styles/index.css, set the import order to: fonts.css first (font-face declarations), then tailwind.css (Tailwind base, components, utilities), then theme.css (design token CSS custom properties), then global.css (global overrides). Add a comment at the top of each CSS file explaining its purpose. Remove any duplicate CSS declarations that appear in multiple files. Do NOT change any token values or custom property definitions.
+
+FIX SVG IMPORT INCONSISTENCY
+
+Make all SVG imports consistent. SVGs used as React components should be .tsx files with proper component exports. SVGs used as static assets should be .svg files imported via standard methods. The svg-hash.ts files (svg-nfgt94iwfz.ts, svg-hyqnwpr728.ts, svg-u6q4a94zig.ts, svg-x7w1ci3sv6.ts, svg-zd775h5m55.ts, svg-ts9r30qzz5.ts, svg-96ticid8sn.ts, svg-cygtmxp98m.ts, svg-he2fofxx05.ts, svg-vm3t51ryda.ts, svg-kmufnzacib.ts, svg-xhbnah5flz.ts, svg-u5vdjjk81p.ts, and svg-cev9o.tsx) should all be renamed to semantic names that describe what they contain. Remove any duplicate SVG representations of the same visual asset.
+
+FIX PAGE COMPONENT DUPLICATION
+
+The src/pages/ directory is the single source of truth for all page components. Either remove src/app/components/pages/ entirely or reduce DeploymentsRoute.tsx, UsersRoute.tsx, MonitoringRoute.tsx, DataVolumesRoute.tsx, CreateVolumeRoute.tsx, ImportFileRoute.tsx, NodeHealthRoute.tsx, and NotFound.tsx to thin one-line wrappers that import and re-export from src/pages/. Move PageWrapper.tsx to src/templates/ as it is a layout concern. Move AppLayout.tsx to src/templates/ as it defines the application shell.
+
+SEPARATE DOCUMENTATION FROM APP
+
+Move ShowcasePage.tsx to src/docs/ShowcasePage.tsx. Rename and move ds-atoms.tsx to src/docs/AtomsShowcase.tsx. Rename and move ds-molecules.tsx to src/docs/MoleculesShowcase.tsx. Rename and move ds-organisms.tsx to src/docs/OrganismsShowcase.tsx. Rename and move ds-token-table.tsx to src/docs/TokenTablePage.tsx. All documentation components should live in src/docs/ to keep them isolated from the main application bundle.
+
+ORGANIZE THE IMPORTS FOLDER
+
+Split src/imports/ into three sub-folders. Keep src/imports/tokens/ as-is with light.json, dark.json, and build-tokens.ts. Create src/imports/assets/ and move all SVG files there. Create src/imports/screenshots/ and move all page screenshot components (Deployments.tsx, Users.tsx, the various imported page views) there.
+
+FIX ICON STRATEGY
+
+Update src/atoms/icons/index.tsx to be the single barrel export for every icon the system uses, whether custom SVG or from lucide-react. Add a comment at the top documenting the preferred icon source. Audit all component files and ensure no icon is imported from two different sources in different places.
+
+FIX CHART COMPONENT PLACEMENT
+
+Move NodeHealthChart.tsx from app/components/ to src/organisms/charts/NodeHealthChart.tsx and update imports. Keep chart.tsx in ui/ for now as it will be moved in the restructuring phase. If OI_Statistics.svg is a static screenshot, move it to imports/screenshots/.
+Do NOT modify any values in light.json, dark.json, theme.css, or any design token definitions. Only fix structure, naming, imports, and organization.

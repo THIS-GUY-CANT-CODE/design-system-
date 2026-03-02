@@ -1,0 +1,1548 @@
+@custom-variant dark (&:is(.dark *));
+
+/* ================================================================
+   THEME.CSS  —  DESIGN SYSTEM TOKEN CASCADE
+
+   Data flows in ONE direction only:
+
+   ┌─────────────────────────────────────────────────────────────┐
+   │  LAYER 1 · PRIMITIVES                                       │
+   │  Raw values only (px, rgba, numbers, strings). No var().    │
+   │  Sub-sections: Typography · Colours · Spacing · Radius      │
+   │                Shadows · Motion · Z-index · Sizes           │
+   ├─────────────────────────────────────────────────────────────┤
+   │  DARK MODE  (.dark)                                         │
+   │  Overrides ONLY Layer 1 colour tokens that flip.            │
+   │  Every downstream layer updates automatically.              │
+   ├─────────────────────────────────────────────────────────────┤
+   │  TAILWIND BRIDGE  (@theme inline)                           │
+   │  Maps Layer 1 → Tailwind utility classes.                   │
+   │  e.g. bg-background · text-foreground · rounded-md          │
+   ├─────────────────────────────────────────────────────────────┤
+   │  LAYER 2 · SEMANTIC                                         │
+   │  Every token is a var(--layer-1-*) reference. No raw values │
+   │  (except rgba overlays that cannot be split further).       │
+   │  Sub-sections: Text scale · Radius aliases · Overlay        │
+   │                Foreground · Background · Border · Icon      │
+   │                Status · Focus rings                         │
+   ├─────────────────────────────────────────────────────────────┤
+   │  LAYER 3 · COMPONENTS                                       │
+   │  Every token references Layer 2 (colour/meaning) or         │
+   │  Layer 1 (spacing/radius/sizing). No raw colour values.     │
+   │  Sub-sections: one block per component.                     │
+   └─────────────────────────────────────────────────────────────┘
+
+   Rules
+   ─────
+   • Editing a Layer 1 value propagates to all layers below.
+   • Never skip layers — Layer 3 must not reference Layer 1 colours.
+   • Legacy backward-compat aliases are clearly marked with (↩).
+   ================================================================ */
+
+
+/* ================================================================
+   LAYER 1 · PRIMITIVES
+   The ONLY place raw values (numbers, px, rgba) are written.
+   ================================================================ */
+:root {
+
+  /* ── A. Typography ────────────────────────────────────────── */
+
+  /* Families — declared in fonts.css */
+  --font-family-primary: 'Inter', sans-serif;
+  --font-family-mono:    'Cousine', monospace;
+  --font-family-display: 'DM Sans', sans-serif;
+
+  /* Weights */
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* Size scale — canonical set, 11 px → 56 px */
+  --font-size-xs:  11px;   /* micro / badge   */
+  --font-size-sm:  12px;   /* caption / helper */
+  --font-size-md:  14px;   /* body / base      */
+  --font-size-lg:  16px;   /* title            */
+  --font-size-xl:  20px;   /* heading          */
+  --font-size-2xl: 24px;   /* display          */
+  --font-size-3xl: 32px;   /* h4               */
+  --font-size-4xl: 40px;   /* h3               */
+  --font-size-5xl: 48px;   /* h2               */
+  --font-size-6xl: 56px;   /* h1               */
+
+  /* Line heights */
+  --line-height-none: 1;      /* tight — inline badges / chips */
+  --line-height-xs:  16px;
+  --line-height-sm:  18px;
+  --line-height-md:  20px;
+  --line-height-lg:  24px;
+  --line-height-xl:  28px;
+  --line-height-2xl: 32px;
+
+  /* Letter spacing */
+  --letter-spacing-body:    -0.084px;
+  --letter-spacing-heading: -0.176px;
+
+
+  /* ── B. Colour palette ────────────────────────────────────── */
+
+  /* — Surface / neutral (mapped to Tailwind utilities in @theme) — */
+  --background:             rgba(255, 255, 255, 1.00);
+  --foreground:             rgba( 24,  27,  37, 1.00);
+  --card:                   rgba(255, 255, 255, 1.00);
+  --card-foreground:        rgba( 24,  27,  37, 1.00);
+  --popover:                rgba( 24,  27,  37, 1.00);  /* dark tooltip bg */
+  --popover-foreground:     rgba(255, 255, 255, 1.00);
+  --secondary:              rgba(245, 247, 250, 1.00);
+  --secondary-foreground:   rgba(113, 119, 132, 1.00);
+  --muted:                  rgba(245, 247, 250, 1.00);  /* ≡ secondary */
+  --muted-foreground:       rgba(153, 160, 174, 1.00);
+  --border:                 rgba(225, 228, 234, 1.00);
+  --input:                  rgba(255, 255, 255, 1.00);
+  --input-background:       rgba(255, 255, 255, 1.00);
+
+  /* — Brand / interactive — */
+  --primary:                rgba( 29, 175, 156, 1.00);  /* teal-600  */
+  --primary-foreground:     rgba(255, 255, 255, 1.00);
+  --accent:                 rgba( 24, 144, 255, 1.00);  /* sky blue  */
+  --accent-foreground:      rgba(255, 255, 255, 1.00);
+  --destructive:            rgba(208,  37,  51, 1.00);  /* red-700   */
+  --destructive-foreground: rgba(255, 255, 255, 1.00);
+  --ring:                   rgba( 29, 175, 156, 1.00);  /* ≡ primary */
+
+  /* — Sidebar surface (mapped to Tailwind --color-sidebar-* in @theme) — */
+  --sidebar:                    rgba(255, 255, 255, 1.00);
+  --sidebar-foreground:         rgba( 24,  27,  37, 1.00);
+  --sidebar-primary:            rgba( 29, 175, 156, 1.00);
+  --sidebar-primary-foreground: rgba(255, 255, 255, 1.00);
+  --sidebar-accent:             rgba( 24, 144, 255, 1.00);
+  --sidebar-accent-foreground:  rgba(255, 255, 255, 1.00);
+  --sidebar-border:             rgba(225, 228, 234, 1.00);
+  --sidebar-ring:               rgba( 29, 175, 156, 1.00);
+
+  /* — Named colour ramp (used by Layer 2 & 3 for status / badges / severity) — */
+
+  /* Teal */
+  --teal-50:  #E4FBF8;
+  --teal-100: #D0FBF5;
+  --teal-200: #C2F5EE;
+  --teal-300: #84EBDD;
+  --teal-400: #55D9C8;
+  --teal-500: #2EC4B0;
+  --teal-600: rgba( 29, 175, 156, 1.00);  /* ≡ --primary */
+  --teal-700: #178C7D;
+  --teal-900: #166264;
+
+  /* Neutral */
+  --neutral-0:   rgba(255, 255, 255, 1.00);  /* ≡ --background */
+  --neutral-25:  #F8FAFC;
+  --neutral-50:  #F5F7FA;
+  --neutral-100: rgba(245, 247, 250, 1.00);  /* ≡ --secondary */
+  --neutral-200: rgba(225, 228, 234, 1.00);  /* ≡ --border */
+  --neutral-300: #CACFD8;
+  --neutral-400: rgba(153, 160, 174, 1.00);  /* ≡ --muted-foreground */
+  --neutral-500: #717784;
+  --neutral-600: rgba(113, 119, 132, 1.00);  /* ≡ --secondary-foreground */
+  --neutral-700: #2B303B;
+  --neutral-800: #222530;
+  --neutral-900: rgba( 24,  27,  37, 1.00);  /* ≡ --foreground */
+  --neutral-950: #0E101B;
+
+  /* Green */
+  --green-50:  #E0FAEC;
+  --green-100: #D0FBE9;
+  --green-300: #84EBB4;
+  --green-500: #1FC16B;
+  --green-700: #178C4E;
+  --green-900: #16643B;
+
+  /* Red */
+  --red-50:  #FFEBEC;
+  --red-100: #FFD5D8;
+  --red-300: #FF97A0;
+  --red-500: #FB3748;
+  --red-700: rgba(208,  37,  51, 1.00);  /* ≡ --destructive */
+  --red-800: #B91C2A;
+  --red-900: #8B1822;
+
+  /* Orange */
+  --orange-50:  #FFF1EB;
+  --orange-100: #FFE3D5;
+  --orange-300: #FFBA97;
+  --orange-500: #FF8447;
+  --orange-700: #D05E25;
+  --orange-900: #8B3E18;
+
+  /* Sky */
+  --sky-50:  #EBF8FF;
+  --sky-100: #D5F1FF;
+  --sky-300: #97DCFF;
+  --sky-400: #6CCCFF;
+  --sky-500: #47C2FF;
+  --sky-700: #2597D0;
+  --sky-800: #124B68;
+  --sky-900: #18658B;
+
+  /* Yellow / Amber */
+  --yellow-50:  #FFFBEB;
+  --yellow-200: #FDE68A;
+  --yellow-500: #F59E0B;
+  --yellow-700: #B45309;
+
+  /* Purple */
+  --purple-50:  #F3F0FF;
+  --purple-100: #E5DFFE;
+  --purple-200: #CAC0FF;
+  --purple-500: #7D52F4;
+  --purple-600: #693EE0;
+  --purple-900: #351A75;
+
+  /* Pink */
+  --pink-50:  #FFF0F8;
+  --pink-100: #FFD6EE;
+  --pink-200: #FFC0DF;
+  --pink-500: #FB4BA3;
+  --pink-600: #E9358F;
+
+  /* Forest */
+  --forest-200: #93B8A9;
+  --forest-500: #0B613E;
+  --forest-600: #104D32;
+
+  /* Blue */
+  --blue-600: #335CFF;
+
+  /* External brand */
+  --nvidia-green: #76B900;
+
+  /* Orange extended (chart / visualisation) */
+  --orange-200: #FFD5C0;
+  --orange-400: #FF9A68;
+
+  /* Yellow extended (chart / visualisation) */
+  --yellow-300: #FFD268;
+
+  /* Teal extended (logo marks — SVG fill fallbacks) */
+  --teal-brand-mark:    #2ED3B7;
+  --teal-brand-dark:    #0E9384;
+  --teal-brand-light:   #34D1BD;
+  --teal-brand-darkest: #0C4941;
+
+  /* Charts */
+  --chart-1: rgba( 29, 175, 156, 1.00);
+  --chart-2: rgba( 24, 144, 255, 1.00);
+  --chart-3: rgba( 71, 194, 255, 1.00);
+  --chart-4: rgba( 24, 101, 139, 1.00);
+  --chart-5: rgba(208, 251, 245, 1.00);
+
+
+  /* ── C. Spacing  (4 px grid) ──────────────────────────────── */
+  --space-px:   1px;
+  --space-0:    0px;
+  --space-half: 2px;   /* micro gap — CSS triangles, segmented control  */
+  --space-1:    4px;
+  --space-2:    8px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-7:    28px;  /* fills gap between space-6 and space-8         */
+  --space-8:    32px;
+  --space-12:   48px;
+  --space-14:   56px;
+  --space-16:   64px;
+
+
+  /* ── D. Radius ────────────────────────────────────────────── */
+  --radius-none: 0px;
+  --radius-xs:   3px;
+  /* NOTE: --radius and --radius-button are the "root" values consumed
+     by @theme inline below. All component references should go through
+     the Layer 2 DS aliases (--radius-sm-ds, --radius-md-ds …).    */
+  --radius:        8px;   /* cards, inputs, modals */
+  --radius-button: 4px;   /* buttons, badges, tags */
+  --radius-full:   9999px;
+
+
+  /* ── E. Shadows ───────────────────────────────────────────── */
+
+  /* Elevation ramp */
+  --shadow-xs: 0px 1px  2px 0px rgba(10, 13, 20, 0.03);
+  --shadow-sm: 0    1px  4px     rgba(10, 13, 20, 0.06);
+  --shadow-md: 0    2px  8px     rgba(10, 13, 20, 0.08);
+  --shadow-lg: 0    8px 16px     rgba(10, 13, 20, 0.12);
+  --shadow-xl: 0   12px 24px     rgba(10, 13, 20, 0.16);
+
+  /* Pop — elevated controls (sliders, tooltips, dropdowns) */
+  --shadow-pop-sm: 0 1px  4px rgba(10, 13, 20, 0.20);
+  --shadow-pop-md: 0 4px 12px rgba(10, 13, 20, 0.15);
+  --shadow-pop-lg: 0 8px 24px rgba(10, 13, 20, 0.12),
+                   0 2px  8px rgba(10, 13, 20, 0.06);
+
+  /* Focus rings */
+  --shadow-ring-brand: 0 0 0 3px rgba( 29, 175, 156, 0.15);
+  --shadow-ring-error: 0 0 0 3px rgba(251,  55,  72, 0.12);
+
+  /* Specialised */
+  --shadow-nav:        0 1px 0 rgba(10, 13, 20, 0.06);
+  --shadow-brand-glow: 0 1px 4px rgba(29, 175, 156, 0.35);
+
+  /* (↩) Legacy aliases — keep to avoid breaking existing component code */
+  --elevation-sm:         var(--shadow-xs);
+  --shadow-brand-glow-sm: var(--shadow-brand-glow);
+
+
+  /* ── F. Motion ────────────────────────────────────────────── */
+  --duration-fast:    150ms;
+  --duration-default: 200ms;
+  --duration-slow:    300ms;
+
+  --ease-out:    cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in:     cubic-bezier(0.32, 0, 0.67, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* (↩) Legacy aliases */
+  --transition-fast:    var(--duration-fast);
+  --transition-default: var(--duration-default);
+  --transition-slow:    var(--duration-slow);
+
+
+  /* ── G. Z-index ───────────────────────────────────────────── */
+  --z-base:           0;
+  --z-raised:         1;    /* local stacking above sibling (e.g. circle over connector) */
+  --z-above:          2;
+  --z-sticky:         10;
+  --z-sidebar:        20;
+  --z-dropdown:       30;
+  --z-drawer-overlay: 35;
+  --z-drawer:         40;
+  --z-modal-overlay:  45;
+  --z-modal:          50;
+  --z-toast:          60;
+
+
+  /* ── H. Sizes ─────────────────────────────────────────────── */
+
+  /* Icons */
+  --size-icon-xs: 14px;
+  --size-icon-sm: 16px;
+  --size-icon-md: 20px;
+  --size-icon-lg: 24px;
+
+  /* Controls — three-size system (sm=24 · md=32 · lg=40) */
+  --size-control-sm: 24px;
+  --size-control-md: 32px;
+  --size-control-lg: 40px;
+
+  /* Indicator dots */
+  --size-dot-sm:     6px;   /* small status dot (App shell, header)    */
+  --size-dot-notify: 7px;   /* notification unread badge dot           */
+  --size-dot-md:     8px;   /* medium status dot (badges, tags)        */
+  --size-dot-lg:    12px;   /* large status dot (xl avatar indicator)  */
+
+  /* Small chips / tab badges */
+  --size-chip-sm:        18px;   /* icon chip, tier badge in tabs             */
+  --size-chip-count-min: 22px;   /* count pill minimum width                  */
+
+  /* Icon containers (square box holding an icon) */
+  --size-icon-container:    36px;   /* medium container (between control-md/lg)  */
+  --size-icon-container-sm: 28px;   /* small container (logo mark)               */
+
+  /* Borders */
+  --border-width-thin:   1px;
+  --border-width-medium: 2px;
+
+  /* CSS triangle / arrow caret sizes */
+  --size-arrow-sm: 5px;   /* tooltip arrow caret                       */
+  --size-arrow-md: 6px;   /* popover arrow caret                       */
+
+  /* (↩) Legacy aliases */
+  --icon-size-sm:      var(--size-icon-sm);
+  --icon-size-md:      var(--size-icon-md);
+  --icon-size-lg:      var(--size-icon-lg);
+  --control-height-sm: var(--size-control-sm);
+  --control-height-md: var(--size-control-md);
+  --control-height-lg: var(--size-control-lg);
+
+
+  /* ── I. Letter-spacing extended scale ─────────────────────── */
+  /* Positive (tracking / open) */
+  --letter-spacing-tracking-xs: 0.02em;   /* logo sub-label            */
+  --letter-spacing-tracking-sm: 0.04em;   /* showcase tier chip        */
+  --letter-spacing-tracking-md: 0.06em;   /* section label caps        */
+  --letter-spacing-tracking-lg: 0.08em;   /* uppercase nav groups      */
+  --letter-spacing-tracking-xl: 0.20em;   /* watermark                 */
+  /* Negative (tight / display) */
+  --letter-spacing-display: -0.4px;   /* display wordmark tight    */
+  --letter-spacing-title:   -0.2px;   /* page title / heading snug */
+
+
+  /* ── J. Opacity ───────────────────────────────────────────── */
+  --opacity-icon-wash:      0.15;  /* icon background circle wash            */
+  --opacity-area-fill:      0.12;  /* area chart / sparkline fill            */
+  --opacity-subtle:         0.3;   /* very soft overlays, SVG data fills     */
+  --opacity-disabled-soft:  0.4;   /* checkbox / radio / rate disabled state */
+  --opacity-disabled:       0.5;   /* general disabled controls, sort icon   */
+  --opacity-muted:          0.6;   /* muted close buttons, soft UI elements  */
+  --opacity-logo-secondary: 0.65;  /* logo grid secondary quads             */
+  --opacity-indicator:      0.7;   /* visual indicator bars / previews       */
+  --opacity-soft:           0.85;  /* text on brand / accent backgrounds     */
+
+  /* ── K. Chart typography ─────────────────────────────────── */
+  --font-size-chart: 8px;   /* SVG axis label size in charts          */
+}
+
+
+/* ================================================================
+   DARK MODE
+   Overrides ONLY Layer 1 colour tokens that flip in dark mode.
+   All Layer 2 and Layer 3 tokens update automatically via var().
+   ================================================================ */
+.dark {
+  /* Surfaces */
+  --background:             rgba( 24,  27,  37, 1.00);
+  --foreground:             rgba(255, 255, 255, 1.00);
+  --card:                   rgba( 37,  42,  52, 1.00);
+  --card-foreground:        rgba(255, 255, 255, 1.00);
+  --popover:                rgba( 37,  42,  52, 1.00);
+  --popover-foreground:     rgba(255, 255, 255, 1.00);
+  --secondary:              rgba( 37,  42,  52, 1.00);
+  --secondary-foreground:   rgba(153, 160, 174, 1.00);
+  --muted:                  rgba( 37,  42,  52, 1.00);
+  --muted-foreground:       rgba(113, 119, 132, 1.00);
+  --border:                 rgba( 75,  85,  99, 1.00);
+  --input:                  rgba( 37,  42,  52, 1.00);
+  --input-background:       rgba( 37,  42,  52, 1.00);
+  --destructive:            rgba(220,  53,  69, 1.00);
+
+  /* Sidebar surface */
+  --sidebar:                rgba( 24,  27,  37, 1.00);
+  --sidebar-foreground:     rgba(255, 255, 255, 1.00);
+  --sidebar-border:         rgba( 75,  85,  99, 1.00);
+
+  /* Neutral ramp — dark overrides */
+  --neutral-0:   rgba( 24,  27,  37, 1.00);
+  --neutral-100: rgba( 37,  42,  52, 1.00);
+  --neutral-200: rgba( 75,  85,  99, 1.00);
+  --neutral-400: rgba(113, 119, 132, 1.00);
+  --neutral-600: rgba(153, 160, 174, 1.00);
+  --neutral-900: rgba(255, 255, 255, 1.00);
+
+  /* Shadow ramp — dark overrides */
+  --shadow-xs: 0px 1px  2px 0px rgba(0, 0, 0, 0.30);
+  --shadow-sm: 0    1px  4px     rgba(0, 0, 0, 0.25);
+  --shadow-md: 0    2px  8px     rgba(0, 0, 0, 0.30);
+  --shadow-lg: 0    8px 16px     rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0   12px 24px     rgba(0, 0, 0, 0.40);
+}
+
+
+/* ================================================================
+   TAILWIND BRIDGE  (@theme inline)
+   Maps Layer 1 tokens → Tailwind utility classes.
+   Uses var() references so all utilities auto-update with dark mode.
+   ================================================================ */
+@theme inline {
+
+  /* Colours */
+  --color-background:                 var(--background);
+  --color-foreground:                 var(--foreground);
+  --color-card:                       var(--card);
+  --color-card-foreground:            var(--card-foreground);
+  --color-popover:                    var(--popover);
+  --color-popover-foreground:         var(--popover-foreground);
+  --color-primary:                    var(--primary);
+  --color-primary-foreground:         var(--primary-foreground);
+  --color-secondary:                  var(--secondary);
+  --color-secondary-foreground:       var(--secondary-foreground);
+  --color-muted:                      var(--muted);
+  --color-muted-foreground:           var(--muted-foreground);
+  --color-accent:                     var(--accent);
+  --color-accent-foreground:          var(--accent-foreground);
+  --color-destructive:                var(--destructive);
+  --color-destructive-foreground:     var(--destructive-foreground);
+  --color-border:                     var(--border);
+  --color-input:                      var(--input);
+  --color-ring:                       var(--ring);
+  --color-chart-1:                    var(--chart-1);
+  --color-chart-2:                    var(--chart-2);
+  --color-chart-3:                    var(--chart-3);
+  --color-chart-4:                    var(--chart-4);
+  --color-chart-5:                    var(--chart-5);
+
+  /* Sidebar colours */
+  --color-sidebar:                    var(--sidebar);
+  --color-sidebar-foreground:         var(--sidebar-foreground);
+  --color-sidebar-primary:            var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:             var(--sidebar-accent);
+  --color-sidebar-accent-foreground:  var(--sidebar-accent-foreground);
+  --color-sidebar-border:             var(--sidebar-border);
+  --color-sidebar-ring:               var(--sidebar-ring);
+
+  /* Radius — maps to rounded-sm · rounded-md · rounded-lg · rounded-xl */
+  --radius-sm: var(--radius-button);            /*  4px */
+  --radius-md: var(--radius);                   /*  8px */
+  --radius-lg: calc(var(--radius) + 4px);       /* 12px */
+  --radius-xl: calc(var(--radius) + 8px);       /* 16px */
+}
+
+
+/* ================================================================
+   LAYER 2 · SEMANTIC
+   Gives meaning to raw values.
+   Every token references a Layer 1 primitive.
+   Exception: rgba() overlay / glass tokens that cannot be derived
+   from a single CSS custom property are kept here as composites.
+   ================================================================ */
+:root {
+
+  /* ── A. Text scale — Layer 1 font-size-* → meaningful names ─ */
+  /*      Components reference these names, not raw font-size-*  */
+
+  --text-micro:   var(--font-size-xs);   /* 11px — micro / badge      */
+  --text-caption: var(--font-size-sm);   /* 12px — helper / label     */
+  --text-base:    var(--font-size-md);   /* 14px — body / base        */
+  --text-title:   var(--font-size-lg);   /* 16px — card title         */
+  --text-heading: var(--font-size-xl);   /* 20px — section heading    */
+  --text-display: var(--font-size-2xl);  /* 24px — page display title */
+  --text-h4:      var(--font-size-3xl);  /* 32px */
+  --text-h3:      var(--font-size-4xl);  /* 40px */
+  --text-h2:      var(--font-size-5xl);  /* 48px */
+  --text-h1:      var(--font-size-6xl);  /* 56px */
+
+  /* (↩) Shorthand size aliases — numeric naming for component authors */
+  --text-lg:  var(--text-title);    /* 16px — synonym for text-title   */
+  --text-xl:  var(--text-heading);  /* 20px — synonym for text-heading  */
+  --text-2xl: var(--text-display);  /* 24px — synonym for text-display  */
+
+  /* Semantic layout shorthands (used by page-level components) */
+  --text-label: var(--text-caption);  /* form labels / helper text */
+  --text-body:  var(--text-base);     /* running paragraph body    */
+
+  /* (↩) Font-weight aliases used by existing component code */
+  --font-weight-regular:   var(--font-weight-normal);
+  --font-weight-ds-medium: var(--font-weight-medium);
+
+  /* (↩) Letter-spacing alias used by existing component code */
+  --letter-spacing-subheading: var(--letter-spacing-heading);
+
+
+  /* ── B. Radius aliases — Layer 1 → DS naming convention ──── */
+  /*      Use these in all Layer 3 component tokens.           */
+
+  --radius-none-ds: var(--radius-none);      /*   0px */
+  --radius-sm-ds:   var(--radius-button);    /*   4px — buttons, badges */
+  --radius-md-ds:   var(--radius);           /*   8px — cards, inputs   */
+  --radius-lg-ds:   calc(var(--radius) + 4px); /* 12px — modals, panels */
+  --radius-full-ds: var(--radius-full);      /* 9999px — pills, avatars */
+
+
+  /* ── C. Overlay  (semi-transparent composites) ───────────── */
+  --overlay-light:        rgba(255, 255, 255, 0.50);
+  --overlay-medium:       rgba( 14,  16,  27, 0.50);
+  --overlay-heavy:        rgba( 14,  16,  27, 0.70);
+  --overlay-black:        rgba(  0,   0,   0, 0.80);
+  --overlay-image-hover:  rgba(  0,   0,   0, 0.30);
+  --overlay-white-strong: rgba(255, 255, 255, 0.80);
+  --overlay-white-mid:    rgba(255, 255, 255, 0.65);
+  --overlay-white-weak:   rgba(255, 255, 255, 0.45);
+  --glass-header:         rgba(255, 255, 255, 0.92);
+  --glass-sidebar:        rgba(255, 255, 255, 0.88);
+
+
+  /* ── D. Foreground ───────────────────────────────────────── */
+  --fg-primary:   var(--foreground);            /* neutral-900 */
+  --fg-secondary: var(--secondary-foreground);  /* neutral-600 */
+  --fg-tertiary:  var(--muted-foreground);      /* neutral-400 */
+  --fg-disabled:  var(--muted-foreground);      /* neutral-400 */
+  --fg-inverse:   var(--primary-foreground);    /* white on brand/dark */
+  --fg-brand:     var(--primary);               /* teal */
+  --fg-link:      var(--primary);               /* teal */
+  --fg-success:   var(--green-700);
+  --fg-error:     var(--destructive);           /* red */
+  --fg-warning:   var(--orange-700);
+  --fg-info:      var(--sky-700);
+  --fg-alert:     var(--pink-600);
+  --fg-caution:   var(--yellow-700);
+  --fg-complete:  var(--purple-600);
+
+
+  /* ── E. Background ───────────────────────────────────────── */
+  --bg-primary:        var(--background);    /* page / default surface */
+  --bg-secondary:      var(--secondary);     /* subtle tint            */
+  --bg-tertiary:       var(--border);        /* divider-weight bg      */
+  --bg-disabled:       var(--muted);         /* disabled controls      */
+  --bg-inverse:        var(--foreground);    /* inverse surfaces       */
+  --bg-flush:          var(--neutral-25);    /* lightest tint — panel footers, alt rows */
+  --bg-brand:          var(--primary);
+  --bg-brand-subtle:   var(--teal-50);
+  --bg-brand-tint:     var(--teal-100);      /* stronger tint for icon bg inside active items */
+  --bg-link:           var(--teal-700);
+  --bg-success:        var(--green-700);
+  --bg-success-subtle: var(--green-50);
+  --bg-error:          var(--red-500);
+  --bg-error-subtle:   var(--red-50);
+  --bg-warning:        var(--orange-500);
+  --bg-warning-subtle: var(--orange-50);
+  --bg-info:            var(--accent);        /* sky blue */
+  --bg-info-subtle:     var(--sky-50);
+  --bg-alert:           var(--pink-500);
+  --bg-alert-subtle:    var(--pink-50);
+  --bg-caution:         var(--yellow-500);
+  --bg-caution-subtle:  var(--yellow-50);
+  --bg-complete:        var(--purple-500);
+  --bg-complete-subtle: var(--purple-50);
+
+
+  /* ── F. Border ───────────────────────────────────────────── */
+  --border-default:  var(--border);           /* neutral-200 */
+  --border-strong:   var(--neutral-300);
+  --border-disabled: var(--border);
+  --border-focus:    var(--ring);             /* primary / teal */
+  --border-brand:    var(--primary);
+  --border-success:  var(--green-500);
+  --border-error:    var(--red-500);
+  --border-divider:  var(--border);
+  /* Subtle (100/200-level) borders for alert accent rings */
+  --border-brand-subtle:   var(--teal-200);    /* light brand ring, e.g. tier badges */
+  --border-success-subtle: var(--green-300);
+  --border-info-subtle:    var(--sky-300);
+  --border-warning-subtle: var(--orange-300);
+  --border-error-subtle:   var(--red-300);
+  --border-alert:    var(--pink-200);
+  --border-caution:  var(--yellow-200);
+  --border-complete: var(--purple-200);
+
+  /* (↩) Legacy aliases used by existing component code */
+  --border-primary:   var(--border-default);
+  --border-secondary: var(--border-strong);
+
+  /* Focus ring shadows (composite — opaque alpha cannot split further) */
+  --focus-ring-color:       rgba( 29, 175, 156, 0.15);
+  --focus-ring-error-color: rgba(251,  55,  72, 0.12);
+
+
+  /* ── G. Icon ─────────────────────────���────────────────────── */
+  --icon-primary:   var(--foreground);
+  --icon-secondary: var(--muted-foreground);
+  --icon-tertiary:  var(--muted-foreground);
+  --icon-disabled:  var(--neutral-300);
+  --icon-inverse:   var(--primary-foreground);
+  --icon-brand:     var(--primary);
+  --icon-success:   var(--green-500);
+  --icon-error:     var(--red-500);
+  --icon-warning:   var(--orange-500);
+  --icon-info:      var(--accent);
+  --icon-alert:     var(--pink-500);
+  --icon-caution:   var(--yellow-500);
+  --icon-complete:  var(--purple-500);
+
+
+  /* ── H. Status ───────────────────────────────────────────── */
+  --status-healthy:      var(--green-500);
+  --status-warning:      var(--orange-500);
+  --status-unhealthy:    var(--red-500);
+  --status-disconnected: var(--secondary-foreground);
+  --status-maintenance:  var(--accent);
+  --status-allocated:    var(--sky-500);
+  --status-used:         var(--sky-900);
+}
+
+
+/* ================================================================
+   LAYER 3 · COMPONENTS
+   Tokens consumed directly by component style props.
+   Colour/meaning → Layer 2.  Spacing / radius / sizing → Layer 1.
+   ================================================================ */
+:root {
+
+  /* ── Button ───────────────────────────────────────────────── */
+  --btn-primary-bg:          var(--bg-brand);
+  --btn-primary-fg:          var(--fg-inverse);
+  --btn-primary-bg-hover:    var(--teal-700);
+  --btn-primary-bg-active:   var(--teal-900);
+  --btn-secondary-bg:        var(--bg-primary);
+  --btn-secondary-fg:        var(--fg-primary);
+  --btn-secondary-border:    var(--border-default);
+  --btn-secondary-bg-hover:  var(--bg-secondary);
+  --btn-secondary-bg-active: var(--bg-disabled);
+  --btn-danger-bg:           var(--destructive);
+  --btn-danger-fg:           var(--fg-inverse);
+  --btn-danger-bg-hover:     var(--red-800);
+  --btn-danger-bg-active:    var(--red-900);
+  --btn-ghost-bg:            transparent;
+  --btn-ghost-fg:            var(--fg-secondary);
+  --btn-ghost-bg-hover:      var(--bg-secondary);
+  --btn-ghost-bg-active:     var(--bg-disabled);
+  --btn-disabled-bg:         rgba(0, 0, 0, 0.04);  /* semi-transparent so bg surface shows through */
+  --btn-disabled-fg:         var(--fg-disabled);
+  --btn-disabled-border:     var(--border-default);
+  --btn-height-sm:           var(--size-control-sm);   /* 24px */
+  --btn-height-md:           var(--size-control-md);   /* 32px */
+  --btn-height-lg:           var(--size-control-lg);   /* 40px */
+  --btn-radius:              var(--radius-sm-ds);
+  --btn-padding-sm:          var(--space-2);
+  --btn-padding-md:          var(--space-3);
+  --btn-padding-lg:          var(--space-4);
+  --btn-font-size:           var(--text-base);
+  --btn-gap:                 var(--space-1);
+  --btn-transition:          var(--duration-fast) var(--ease-out);
+
+
+  /* ── Input ──────────────────────────────────────────────── */
+  --input-ds-bg:            var(--bg-primary);
+  --input-ds-bg-disabled:   var(--bg-disabled);
+  --input-ds-fg:            var(--fg-primary);
+  --input-ds-fg-disabled:   var(--fg-disabled);
+  --input-ds-placeholder:   var(--fg-tertiary);
+  --input-ds-border:        var(--border-default);
+  --input-ds-border-hover:  var(--border-strong);
+  --input-ds-border-focus:  var(--border-focus);
+  --input-ds-border-error:  var(--border-error);
+  --input-ds-bg-error:      var(--bg-error-subtle);
+  --input-ds-radius:        var(--radius-md-ds);
+  --input-ds-height-sm:     var(--size-control-sm);
+  --input-ds-height-md:     var(--size-control-md);
+  --input-ds-height-lg:     var(--size-control-lg);
+  --input-ds-font-size:     var(--text-base);
+  --input-ds-font-helper:   var(--text-caption);
+  --input-ds-shadow:        var(--shadow-xs);
+  --input-ds-transition:    var(--duration-fast) var(--ease-out);
+
+
+  /* ── Badge ───────���────────────────────────────────────────── */
+  --badge-radius:          var(--radius-sm-ds);
+  --badge-padding-x:       var(--space-2);
+  --badge-padding-y:       2px;
+  --badge-font-size:       var(--text-caption);
+  --badge-line-height:     var(--line-height-sm);
+  --badge-gap:             2px;
+  --badge-icon-size:       var(--size-icon-sm);
+  --badge-primary-bg:      var(--teal-50);
+  --badge-primary-fg:      var(--teal-700);
+  --badge-success-bg:      var(--bg-success-subtle);
+  --badge-success-fg:      var(--fg-success);
+  --badge-error-bg:        var(--bg-error-subtle);
+  --badge-error-fg:        var(--fg-error);
+  --badge-warning-bg:      var(--bg-warning-subtle);
+  --badge-warning-fg:      var(--fg-warning);
+  --badge-neutral-bg:      var(--bg-secondary);
+  --badge-neutral-fg:      var(--fg-secondary);
+  --badge-info-bg:         var(--bg-info-subtle);
+  --badge-info-fg:         var(--fg-info);
+  --badge-disconnected-bg: var(--neutral-300);
+  --badge-disconnected-fg: var(--fg-secondary);
+  --badge-dot-bg:          var(--bg-error);
+
+
+  /* ── Severity ─────────────────────────────────────────────── */
+  --severity-critical-bg: var(--bg-error-subtle);
+  --severity-critical-fg: var(--bg-error);
+  --severity-high-bg:     var(--pink-200);
+  --severity-high-fg:     var(--pink-600);
+  --severity-medium-bg:   var(--bg-warning-subtle);
+  --severity-medium-fg:   var(--bg-warning);
+
+
+  /* ── Card ─────────────────────────────────────────────────── */
+  --card-ds-bg:           var(--card);
+  --card-ds-border:       var(--border-default);
+  --card-ds-radius-sm:    var(--radius-sm-ds);
+  --card-ds-radius-md:    var(--radius-md-ds);
+  --card-ds-radius-lg:    var(--radius-md-ds);
+  --card-ds-padding-sm:   var(--space-3);
+  --card-ds-padding-md:   var(--space-4);
+  --card-ds-padding-lg:   var(--space-6);
+  --card-ds-font-title:   var(--text-title);
+  --card-ds-font-meta:    var(--text-caption);
+  --card-ds-font-body:    var(--text-base);
+
+
+  /* ── Modal ────────────────────────────────────────────────── */
+  --modal-bg:          var(--card);
+  --modal-border:      var(--border-default);
+  --modal-radius:      var(--radius-lg-ds);
+  --modal-padding:     var(--space-6);
+  --modal-width-sm:    400px;
+  --modal-width-md:    560px;
+  --modal-width-lg:    720px;
+  --modal-font-title:  var(--text-title);
+  --modal-font-body:   var(--text-base);
+  --modal-overlay-bg:  var(--overlay-medium);
+
+
+  /* ── Drawer ───────────────────────────────────────────────── */
+  --drawer-bg:            var(--card);
+  --drawer-border:        var(--border-default);
+  --drawer-padding:       var(--space-6);
+  --drawer-width-sm:      320px;
+  --drawer-width-md:      480px;
+  --drawer-width-lg:      640px;
+  --drawer-header-height: var(--space-14);   /* 56px */
+  --drawer-font-title:    var(--text-title);
+  --drawer-font-body:     var(--text-base);
+  --drawer-overlay-bg:    var(--overlay-medium);
+
+
+  /* ── Avatar ───────────────────────────────────────────────── */
+  --avatar-bg:        var(--bg-disabled);
+  --avatar-fg:        var(--fg-secondary);
+  --avatar-size-sm:   var(--size-control-sm);
+  --avatar-size-md:   var(--size-control-md);
+  --avatar-size-lg:   var(--size-control-lg);
+  --avatar-size-xl:   var(--space-12);           /* 48px */
+  --avatar-radius:    var(--radius-full-ds);
+  --avatar-font-sm:   var(--font-size-chart);  /* 8px */
+  --avatar-font-md:   var(--text-micro);   /* 11px */
+  --avatar-font-lg:   var(--text-base);    /* 14px */
+  --avatar-font-xl:   var(--text-title);   /* 16px */
+  --avatar-group-overlap-sm: calc(var(--avatar-size-sm) * -0.25);
+  --avatar-group-overlap-md: calc(var(--avatar-size-md) * -0.25);
+  --avatar-group-overlap-lg: calc(var(--avatar-size-lg) * -0.25);
+
+
+  /* ── Sidebar nav ──────────────────────────────────────────── */
+  --sidebar-ds-bg:              var(--sidebar);
+  --sidebar-ds-width:           256px;
+  --sidebar-ds-width-compact:   200px;
+  --sidebar-ds-width-collapsed: var(--space-16);    /* 64px */
+  --sidebar-nav-w-expanded:     220px;              /* sidebar nav demo expanded  */
+  --sidebar-nav-w-collapsed:    56px;               /* sidebar nav demo collapsed */
+  --sidebar-ds-border:          var(--sidebar-border);
+  --sidebar-ds-padding:         var(--space-4);
+  --sidebar-item-height:        var(--size-control-lg);
+  --sidebar-item-gap:           2px;
+  --sidebar-item-radius:        var(--radius-md-ds);
+  --sidebar-item-padding-x:     var(--space-3);
+  --sidebar-item-icon-gap:      var(--space-2);
+  --sidebar-item-bg:            var(--sidebar);
+  --sidebar-item-fg:            var(--sidebar-foreground);
+  --sidebar-item-icon:          var(--fg-tertiary);
+  --sidebar-item-bg-active:     var(--teal-50);
+  --sidebar-item-fg-active:     var(--teal-700);
+  --sidebar-item-icon-active:   var(--fg-brand);
+  --sidebar-item-bg-hover:      var(--bg-secondary);
+
+
+  /* ── Top nav ──────────────────────────────────────────────── */
+  --topnav-height:    var(--space-16);     /* 64px */
+  --topnav-height-sm: 48px;
+  --topnav-height-md: var(--space-14);    /* 56px */
+  --topnav-bg:        var(--bg-primary);
+  --topnav-border:    var(--border-default);
+  --topnav-padding-x: var(--space-12);
+  --topnav-shadow:    var(--shadow-nav);
+
+
+  /* ── Breadcrumb ───────────────────────────────────────────── */
+  --breadcrumb-height:    var(--size-control-lg);
+  --breadcrumb-bg:        var(--bg-secondary);
+  --breadcrumb-fg:        var(--fg-secondary);
+  --breadcrumb-separator: var(--neutral-300);
+  --breadcrumb-gap:       6px;
+  --breadcrumb-padding-x: var(--space-6);
+
+
+  /* ── Tabs ─────────────────────────────────────────────────── */
+  --tab-font-size:     var(--text-base);
+  --tab-fg:            var(--fg-secondary);
+  --tab-fg-active:     var(--fg-primary);
+  --tab-border-active: var(--primary);
+  --tab-border-width:  var(--border-width-medium);
+  --tab-gap:           var(--space-6);
+  --tab-padding-y:     14px;
+
+
+  /* ── Segmented control ────────────────────────────────────── */
+  --segment-bg:            var(--bg-secondary);
+  --segment-radius:        10px;
+  --segment-padding:       var(--space-1);
+  --segment-item-width:    132px;
+  --segment-item-radius:   6px;
+  --segment-item-padding:  var(--space-1);
+  --segment-active-bg:     var(--bg-primary);
+  --segment-active-shadow: var(--shadow-md);
+
+
+  /* ── Radio ────────────────────────────────────────────────── */
+  --radio-size:           var(--size-icon-md);
+  --radio-border:         var(--border-default);
+  --radio-border-checked: var(--primary);
+  --radio-fill-checked:   var(--primary);
+  --radio-inner:          var(--bg-primary);
+  --radio-dot-size:       6px;                  /* inner checked dot */
+
+
+  /* ── Checkbox ─────────────────────────────────────────────── */
+  --checkbox-size:           var(--size-icon-md);
+  --checkbox-check-size:     var(--size-icon-sm);   /* 16px checkmark SVG */
+  --checkbox-border:         var(--border-default);
+  --checkbox-border-checked: var(--primary);
+  --checkbox-fill-checked:   var(--primary);
+  --checkbox-check-fg:       var(--fg-inverse);
+
+
+  /* ── Progress bar ─────────────────────────────────────────── */
+  --progress-height:           6px;
+  --progress-radius:           var(--radius-full-ds);
+  --progress-track-bg:         var(--sky-100);
+  --progress-used-bg:          var(--status-used);
+  --progress-allocated-bg:     var(--status-allocated);
+  --progress-allocated-border: var(--sky-700);
+  --progress-brand-bg:         var(--primary);
+
+
+  /* ── Divider ──────────────────────────────────────────────── */
+  --divider-color:       var(--border-divider);
+  --divider-width:       var(--border-width-thin);
+  --divider-label-color: var(--fg-tertiary);
+  --divider-label-size:  var(--text-caption);
+
+
+  /* ── Stepper ──────────────────────────────────────────────── */
+  --stepper-circle-size:       var(--space-6);       /* 24px */
+  --stepper-circle-bg:         var(--bg-secondary);
+  --stepper-circle-fg:         var(--fg-tertiary);
+  --stepper-circle-bg-active:  var(--teal-50);
+  --stepper-circle-fg-active:  var(--status-healthy);
+  --stepper-label-fg:          var(--fg-tertiary);
+  --stepper-label-fg-active:   var(--fg-primary);
+
+  /* ── Number input carets ────────────────────────────────── */
+  --number-caret-w:            var(--size-icon-sm);   /* 16px */
+  --number-caret-h:            14px;                  /* half-height caret button */
+
+
+  /* ── KPI card ─────────────────────────────────────────────── */
+  --kpi-bg:           var(--card);
+  --kpi-border:       var(--border-default);
+  --kpi-radius:       var(--radius-md-ds);
+  --kpi-padding:      18px;
+  --kpi-title-size:   var(--text-base);
+  --kpi-title-color:  var(--fg-tertiary);
+  --kpi-value-size:   22px;
+  --kpi-value-family: var(--font-family-display);
+  --kpi-value-weight: var(--font-weight-bold);
+
+
+  /* ── Page layout ──────────────────────────────────────────── */
+  --page-bg:                var(--bg-primary);
+  --page-title-size:        var(--text-display);
+  --page-title-line-height: var(--line-height-2xl);
+  --page-section-size:      var(--text-heading);
+  --page-desc-size:         var(--text-body);
+  --page-desc-color:        var(--fg-secondary);
+  --page-section-gap:       var(--space-6);
+  --page-content-padding:   var(--space-6);
+
+
+  /* ── Form ─────���───────────────────────────────────────────── */
+  --form-label-size:     var(--text-base);
+  --form-label-color:    var(--fg-primary);
+  --form-required-color: var(--border-error);
+  --form-helper-size:    var(--text-caption);
+  --form-helper-color:   var(--fg-tertiary);
+  --form-field-gap:      var(--space-1);
+  --form-group-gap:      var(--space-6);
+
+
+  /* ── Alert ────────────────────────────────────────────────── */
+  --alert-accent-width:  var(--space-2);
+  --alert-accent-radius: var(--radius-md-ds);
+  --alert-padding:       var(--space-4);
+
+  /* ── Toast ────────────────────────────────────────────────── */
+  --toast-width:       340px;
+  --toast-stack-width: 360px;
+
+  /* ── Dropdown / Select ────────────────────────────────────── */
+  --dropdown-max-height:          248px;
+  --dropdown-list-max-height-sm:  200px;  /* checkbox group, small lists  */
+  --dropdown-list-max-height-md:  360px;  /* notification centre          */
+  --dropdown-list-max-height-lg:  380px;  /* command palette              */
+  --rich-select-list-max-height:  196px;  /* rich metadata select panel   */
+  --dropdown-min-width:           200px;
+
+  /* ── Panels / Popovers ───────────────────────────────────── */
+  --notification-center-width:  560px;
+  --date-picker-width:          260px;
+  --filter-panel-width:         400px;
+  --carousel-slide-height:      160px;
+  --modal-top-offset:            80px;
+
+  /* ── Tooltip ──────────────────────────────────────────────── */
+  --tooltip-bg:        var(--popover);
+  --tooltip-fg:        var(--popover-foreground);
+  --tooltip-radius:    var(--radius-sm-ds);
+  --tooltip-padding:   var(--space-2);
+  --tooltip-font-size: var(--text-caption);
+
+
+  /* ── Table ────────────────────────────────────────────────── */
+  --table-bg:                     var(--bg-primary);
+  --table-border:                 var(--border-default);
+  --table-radius:                 var(--radius-md-ds);
+  --table-header-bg:              var(--bg-secondary);
+  --table-header-fg:              var(--fg-secondary);
+  --table-header-border:          var(--border-strong);
+  --table-header-font:            var(--text-base);
+  --table-header-radius:          var(--radius-md-ds);
+  --table-header-height:          var(--size-control-lg);
+  --table-body-bg:                var(--bg-primary);
+  --table-body-fg:                var(--fg-primary);
+  --table-body-fg-secondary:      var(--fg-secondary);
+  --table-body-font:              var(--text-base);
+  --table-row-border:             var(--border-default);
+  --table-row-bg-hover:           var(--bg-secondary);
+  --table-row-bg-selected:        var(--teal-50);
+  --table-row-bg-striped:         var(--neutral-25);
+  --table-row-height-sm:          36px;
+  --table-row-height-md:          44px;
+  --table-row-height-lg:          54px;
+  --table-cell-link-fg:           var(--fg-brand);
+  --table-cell-icon:              var(--fg-tertiary);
+  --table-cell-padding-block-sm:  var(--space-1);
+  --table-cell-padding-block-md:  var(--space-2);
+  --table-cell-padding-block-lg:  var(--space-3);
+  --table-cell-padding-inline-sm: var(--space-2);
+  --table-cell-padding-inline-md: var(--space-3);
+  --table-cell-padding-inline-lg: var(--space-4);
+  --table-empty-fg:               var(--fg-tertiary);
+  --table-empty-icon:             var(--fg-tertiary);
+  --table-viz-bar-bg:             var(--bg-secondary);
+  --table-viz-bar-used:           var(--status-used);
+  --table-viz-bar-allocated:      var(--status-allocated);
+  --table-viz-bar-height:         var(--size-icon-sm);   /* 16px */
+  --table-viz-bar-radius:         var(--radius-sm-ds);
+  --table-viz-dot-size:           var(--space-2);
+  --table-viz-dot-gap:            var(--space-1);
+
+  /* ── Table column resize ─────────────────────────────────── */
+  --table-resize-handle-w:        var(--space-1);     /* 4px resize grip hit-area */
+  --table-resize-handle-active:   var(--primary);     /* colour while dragging   */
+  --table-resize-handle-hover:    var(--border-strong);
+  --table-resize-handle-idle:     transparent;
+  --table-sort-icon-size:         var(--space-3);     /* 12px sort arrow         */
+  --table-filter-bar-gap:         var(--space-3);
+  --table-file-browser-max-h-sm:  200px;
+  --table-file-browser-max-h-md:  280px;
+  --table-file-browser-max-h-lg:  360px;
+
+
+  /* ── Float button ────────────────────────────────────────── */
+  --float-btn-shadow-primary:      0 4px 16px rgba( 29, 175, 156, 0.40);
+  --float-btn-shadow-default:      0 4px 16px rgba( 10,  13,  20, 0.14);
+  --float-btn-shadow-danger:       0 4px 16px rgba(251,  55,  72, 0.35);
+  --float-btn-action-shadow:       var(--shadow-md);
+  --float-btn-action-shadow-hover: var(--shadow-lg);
+
+
+  /* ── Color picker ─────────────────────────────────────────── */
+  --color-picker-swatch-border: rgba(0, 0, 0, 0.10); /* alpha so it works on any swatch colour */
+
+
+  /* ── Timeline ─────────────────────────────────────────────── */
+  --timeline-pulse-color: var(--primary);
+
+
+  /* ── Keyboard shortcut (Kbd) ──────────────────────────────── */
+  --kbd-font-sm:    var(--text-micro);    /* 11px */
+  --kbd-font-md:    var(--text-micro);    /* 11px */
+  --kbd-font-lg:    var(--text-caption);  /* 12px */
+  --kbd-height-sm:  18px;
+  --kbd-height-md:  22px;
+  --kbd-height-lg:  28px;
+  --kbd-padding-sm: 0 5px;
+  --kbd-padding-md: 0 7px;
+  --kbd-padding-lg: 0 9px;
+  --kbd-radius-sm:  var(--radius-xs);      /*  3px */
+  --kbd-radius-md:  var(--radius-sm-ds);   /*  4px */
+  --kbd-radius-lg:  5px;
+
+
+  /* ── OTP input ────────────────────────────────────────────── */
+  --otp-font-sm:  var(--text-title);    /* 16px */
+  --otp-font-md:  var(--text-heading);  /* 20px */
+  --otp-font-lg:  var(--text-display);  /* 24px */
+  --otp-box-sm:   var(--size-control-md);  /* 32px */
+  --otp-box-md:   var(--size-control-lg);  /* 40px */
+  --otp-box-lg:   48px;
+
+
+  /* ── Skeleton ─────────────────────────────────────────────── */
+  --skeleton-shimmer-from: var(--neutral-100);
+  --skeleton-shimmer-via:  var(--neutral-50);
+
+
+  /* ── Progress bar (extended per-status variants) ──────────── */
+  /* Track (background rail) */
+  --progress-track-normal-bg:  var(--neutral-100);
+  --progress-track-success-bg: var(--green-100);
+  --progress-track-error-bg:   var(--red-100);
+  --progress-track-warning-bg: var(--orange-100);
+  --progress-track-brand-bg:   var(--teal-100);
+  /* Fill (foreground bar) */
+  --progress-fill-default:     var(--sky-700);    /* generic progress bar */
+  --progress-fill-warning:     var(--status-warning);
+
+
+  /* ── Tag / Chip ──────────────────────────────────────────── */
+  --tag-primary-bg:  var(--bg-brand-subtle);
+  --tag-primary-fg:  var(--badge-primary-fg);
+  --tag-success-bg:  var(--bg-success-subtle);
+  --tag-success-fg:  var(--fg-success);
+  --tag-error-bg:    var(--bg-error-subtle);
+  --tag-error-fg:    var(--fg-error);
+  --tag-warning-bg:  var(--bg-warning-subtle);
+  --tag-warning-fg:  var(--fg-warning);
+  --tag-neutral-bg:  var(--bg-secondary);
+  --tag-neutral-fg:  var(--fg-secondary);
+  --tag-info-bg:     var(--bg-info-subtle);
+  --tag-info-fg:     var(--fg-info);
+  --tag-purple-bg:   var(--purple-200);
+  --tag-purple-fg:   var(--purple-600);
+  --tag-pink-bg:     var(--pink-200);
+  --tag-pink-fg:     var(--pink-600);
+  --tag-orange-bg:   var(--orange-100);
+  --tag-orange-fg:   var(--orange-700);
+  --tag-sky-bg:      var(--sky-100);
+  --tag-sky-fg:      var(--sky-700);
+
+
+  /* ── Rating stars ─────��──────────────────────────────────── */
+  --rating-star-active-fill:    var(--orange-500);
+  --rating-star-active-stroke:  var(--orange-500);
+  --rating-star-inactive-fill:  var(--neutral-200);
+  --rating-star-inactive-stroke: var(--neutral-300);
+  --rating-star-w:              var(--size-icon-sm);   /* 16px */
+  --rating-star-h:              14px;                  /* natural star aspect ratio */
+
+
+  /* ── Toggle switch ────────────────────────────────────────── */
+  /* Colors */
+  --toggle-bg-checked:    var(--primary);
+  --toggle-bg-unchecked:  var(--neutral-300);
+  /* Dimensions — also used in JS layout calculations (cannot be CSS-var-only).
+     These tokens serve as documentation + override hooks. */
+  --toggle-sm-w:      20px;  --toggle-sm-h:      12px;
+  --toggle-sm-thumb:   8px;  --toggle-sm-offset:  2px;
+  --toggle-md-w:      32px;  --toggle-md-h:      20px;
+  --toggle-md-thumb:  12px;  --toggle-md-offset:  4px;
+  --toggle-lg-w:      40px;  --toggle-lg-h:      24px;
+  --toggle-lg-thumb:  16px;  --toggle-lg-offset:  4px;
+  /* derived toggle track (inset 2px each side) */
+  --toggle-sm-track-w: calc(var(--toggle-sm-w) - 4px);
+  --toggle-sm-track-h: calc(var(--toggle-sm-h) - 4px);
+  --toggle-md-track-w: calc(var(--toggle-md-w) - 4px);
+  --toggle-md-track-h: calc(var(--toggle-md-h) - 4px);
+  --toggle-lg-track-w: calc(var(--toggle-lg-w) - 4px);
+  --toggle-lg-track-h: calc(var(--toggle-lg-h) - 4px);
+  /* thumb "on" position */
+  --toggle-sm-thumb-on: calc(var(--toggle-sm-w) - var(--toggle-sm-thumb) - var(--toggle-sm-offset));
+  --toggle-md-thumb-on: calc(var(--toggle-md-w) - var(--toggle-md-thumb) - var(--toggle-md-offset));
+  --toggle-lg-thumb-on: calc(var(--toggle-lg-w) - var(--toggle-lg-thumb) - var(--toggle-lg-offset));
+  /* decorative dot */
+  --toggle-sm-dot: calc(var(--toggle-sm-thumb) / 3);
+  --toggle-md-dot: calc(var(--toggle-md-thumb) / 3);
+  --toggle-lg-dot: calc(var(--toggle-lg-thumb) / 3);
+  --toggle-sm-dot-off: calc(var(--toggle-sm-offset) + (var(--toggle-sm-thumb) - var(--toggle-sm-dot)) / 2);
+  --toggle-md-dot-off: calc(var(--toggle-md-offset) + (var(--toggle-md-thumb) - var(--toggle-md-dot)) / 2);
+  --toggle-lg-dot-off: calc(var(--toggle-lg-offset) + (var(--toggle-lg-thumb) - var(--toggle-lg-dot)) / 2);
+  --toggle-track-inset: var(--space-half);  /* 2px each side */
+
+
+  /* ── Slider ───────────────────────────────────────────────── */
+  --slider-rail-bg: var(--neutral-100);
+
+
+  /* ── Step indicator ───────────────────────────────────────── */
+  --step-active-bg: var(--bg-brand-subtle);
+  --step-error-bg:  var(--bg-error-subtle);
+
+
+  /* ── Result state ─────────────────────────────────────────── */
+  --result-success-bg: var(--bg-success-subtle);
+  --result-error-bg:   var(--bg-error-subtle);
+  --result-warning-bg: var(--bg-warning-subtle);
+  --result-info-bg:    var(--bg-info-subtle);
+
+
+  /* ── Shared interaction states ────────────────────────────── */
+  /* Use these wherever teal-50/100 appear as active/selected UI states */
+  --item-active-bg:      var(--bg-brand-subtle);  /* teal-50  — nav, menu active items    */
+  --item-active-icon-bg: var(--bg-brand-tint);    /* teal-100 — icon bg inside active row */
+
+
+  /* ── Card / panel headers ─────────────────────────────────── */
+  /* Gradient colour stops — used as linear-gradient() arguments  */
+  --card-header-grad-from: var(--teal-100);
+  --card-header-grad-to:   var(--sky-100);
+  --panel-header-grad-from: var(--teal-50);
+  --panel-header-grad-to:   var(--sky-50);
+
+
+  /* ── Showcase / DevTool helpers ───────────────────────────── */
+  /* Not consumed by production components; safe to change freely */
+  --showcase-dot-pattern:      var(--border-default);
+  --showcase-progress-grad-mid: var(--chart-3);    /* sky-teal-ish mid-stop */
+  --showcase-accent-height:    3px;                /* tier header accent band   */
+  --showcase-swatch-h:         var(--size-control-lg);  /* token swatch height 40px */
+  --showcase-grid-col-sm:      120px;   /* fg-token swatch grid column min     */
+  --showcase-grid-col-md:      140px;   /* bg-token swatch grid column min     */
+  --showcase-grid-col-auto:    160px;   /* auto-fill grid column min           */
+  --showcase-dot-size:         1px;     /* dot pattern radial size             */
+  --showcase-dot-gap:          20px;    /* dot pattern grid pitch              */
+  --showcase-api-default-col:  100px;   /* API table "Default" column width    */
+
+
+  /* ── Chart (extended) ─────────────────────────────────────── */
+  --chart-6: var(--purple-500);    /* extra series colour for donut / bar */
+  --chart-7: var(--orange-400);    /* salmon / peach series bar           */
+  --chart-8: var(--yellow-300);    /* golden / amber series bar           */
+  --chart-9: var(--purple-600);    /* deep purple series bar              */
+  --chart-10: var(--sky-500);      /* sky blue series bar                 */
+
+
+  /* ── Color picker — preset swatches ──────────────────────── */
+  /* Each token holds the literal swatch colour shown in the picker UI */
+  --color-picker-red:    var(--red-500);
+  --color-picker-orange: var(--orange-500);
+  --color-picker-green:  var(--green-500);
+  --color-picker-purple: var(--purple-500);
+  --color-picker-pink:   var(--pink-500);
+  --color-picker-dark:   var(--neutral-700);
+
+
+  /* ── Avatar stack overflow pill ───────────────────────────── */
+  --avatar-overflow-bg: var(--border-default);   /* neutral-200 */
+
+
+  /* ── Carousel slide demo backgrounds ─────────────────────── */
+  --carousel-slide-1-bg: var(--card-header-grad-from);   /* teal-100 */
+  --carousel-slide-2-bg: var(--card-header-grad-to);     /* sky-100  */
+  --carousel-slide-3-bg: var(--tag-purple-bg);           /* purple-200 */
+  --carousel-slide-4-bg: var(--tag-orange-bg);           /* orange-100 */
+  /* Carousel dot states */
+  --carousel-dot-inactive-bg: var(--border-default);     /* neutral-200 */
+  --carousel-dot-active-bg:   var(--primary);
+
+
+  /* ── Date picker ──────────────────────────────────────────── */
+  --date-picker-in-range-bg: var(--bg-brand-subtle);   /* teal-50 */
+
+
+  /* ── Toast / Sonner icons ─────────────────────────────────── */
+  /* Reuses result-state tokens for the small inline icon SVGs  */
+  --toast-icon-success-bg:  var(--result-success-bg);
+  --toast-icon-error-bg:    var(--result-error-bg);
+  --toast-icon-warning-bg:  var(--result-warning-bg);
+  --toast-icon-info-bg:     var(--result-info-bg);
+  --toast-icon-warning-stroke: var(--status-warning);
+  --toast-loading-track-bg: var(--slider-rail-bg);
+
+
+  /* ── Stepper (pending connector) ─────────────────────────── */
+  --stepper-pending-color: var(--border-strong);   /* neutral-300 */
+
+
+  /* ── Dot / indicator ─────────────────────────────────────── */
+  --dot-neutral-bg:  var(--border-default);   /* neutral-200 */
+  --dot-warning-bg:  var(--status-warning);
+
+
+  /* ── Status indicator dot (tiny inline status dot in chips) ── */
+  --status-indicator-dot-size: 6px;   /* smaller than --space-2 (8px) */
+
+
+  /* ── Status row (grid layout flex basis) ─────────────────── */
+  --status-row-min-w: 140px;   /* minimum flex basis per status item */
+
+
+  /* ── Layout — page-level max-widths ──────────────────────── */
+  --layout-content-max: 1360px;   /* main content column max-width        */
+
+
+  /* ── Panel / organism heights ─────────────────────────────── */
+  --panel-content-max-h:     400px;   /* drawer body, context menu list       */
+  --panel-list-max-h-sm:     300px;   /* command palette list                 */
+  --panel-notif-max-h:       var(--dropdown-list-max-height-md);  /* 360px  */
+  --drawer-panel-max-h:      640px;   /* generic panel / sheet max height     */
+  --settings-panel-min-h:    480px;   /* settings layout min height           */
+  --template-preview-min-h:  420px;   /* template section preview min height  */
+  --template-drawer-max-h:   720px;   /* template tab drawer showcase         */
+  --showcase-drawer-max-h:   680px;   /* organism-tab drawer inline preview   */
+  --showcase-form-max-h:     680px;   /* inline form drawer preview           */
+
+
+  /* ── Panel / organism widths ──────────────────────────────── */
+  --settings-sidebar-w:      220px;   /* settings panel left sidebar          */
+  --settings-panel-max-w:    640px;   /* settings / plan panel max width      */
+  --dropdown-min-w-sm:       200px;   /* small dropdown / tooltip min-width   */
+  --dropdown-min-w-md:       220px;   /* context menu min-width               */
+  --dropdown-min-w-lg:       280px;   /* popover / mega menu min-width        */
+  --popconfirm-min-w:        240px;   /* popconfirm panel min-width           */
+  --sheet-profile-max-w:     320px;   /* profile edit sheet max-width         */
+  --sheet-filter-max-w:      260px;   /* filters sheet max-width              */
+  --form-max-w:              340px;   /* form wrapper max-width               */
+  /* Overlay / command panels */
+  --panel-notif-width:        400px;   /* notification centre panel width     */
+  --command-palette-width:    600px;   /* ⌘K large command palette width      */
+  --command-palette-width-sm: 520px;   /* ⌘K compact variant width            */
+  --auth-form-width:          420px;   /* sign-in / auth form max-width       */
+  /* Side navigation */
+  --sidenav-w-collapsed:       56px;   /* collapsed sidenav (icons only)      */
+  --sidenav-w-expanded:       220px;   /* expanded sidenav width              */
+
+
+  /* ── Card dimensions ──────────────────────────────────────── */
+  --card-profile-width:     280px;   /* user profile card fixed width        */
+  --card-img-header-h:       80px;   /* card top image / gradient area       */
+  --card-icon-container:     36px;   /* square icon container inside cards   */
+  --card-logo-size:          32px;   /* logo mark size                       */
+
+
+  /* ── Table column min-widths ──────────────────────────────── */
+  --table-col-min-hostname: 180px;   /* node hostname + IP column            */
+  --table-col-min-accel:    200px;   /* accelerator grid column              */
+  --table-col-min-resource: 130px;   /* CPU resource bar column              */
+  --table-col-min-resource-lg: 140px; /* memory / storage resource bar       */
+  --table-col-w-check:       40px;   /* checkbox selection column width      */
+
+
+  /* ── Component-specific widths ───────────────────────────── */
+  --stepper-label-max-w:       100px;   /* stepper step label truncation      */
+  --color-picker-swatch-max-w: 200px;   /* color picker swatch grid           */
+  --color-picker-height:       120px;   /* color picker gradient canvas       */
+  --color-picker-cursor-size:   12px;   /* crosshair cursor overlay size      */
+  --color-picker-cursor-offset:  8px;   /* cursor offset from swatch edge     */
+  --color-picker-gradient-dark:  #000;  /* gradient endpoint: black           */
+  --color-picker-gradient-light: #fff;  /* gradient endpoint: white           */
+  --color-swatch-size:          20px;   /* individual swatch tile size        */
+  --color-picker-mini-swatch:   14px;   /* token-list color dot              */
+  --color-picker-preset-swatch: 22px;   /* preset colour grid swatch         */
+  --color-picker-radius-demo-w: var(--space-12);  /* 48px radius preview   */
+  --color-picker-radius-demo-h: 28px;   /* radius preview block height       */
+  --accel-grid-max-w:          156px;   /* accelerator block grid             */
+  --mig-partition-max-w:       480px;   /* MIG partition card max-width       */
+  --gpu-card-max-w:            400px;   /* GPU allocation card max-width      */
+  --storage-quota-max-w:       560px;   /* storage quota form max-width       */
+  --segmented-height:          var(--size-control-lg);  /* 40px segmented control */
+  --showcase-sidebar-preview-h: 300px;  /* sidebar demo inline height         */
+  --showcase-icon-badge-size:  28px;    /* nav icon badge container            */
+  --showcase-max-w-sm:         320px;   /* narrow showcase element max-width  */
+  --showcase-max-w-md:         480px;   /* medium showcase element max-width  */
+  --showcase-max-w-lg:         640px;   /* wide showcase element max-width    */
+  --showcase-component-min-w:  320px;   /* showcase component min-width       */
+  --showcase-dropdown-pad-lg:  200px;   /* room for open dropdown demos       */
+  --showcase-dropdown-pad-md:  180px;   /* slightly shorter dropdown room     */
+  --showcase-popover-pad:      88px;   /* room for popconfirm/popover demos  */
+  --showcase-input-w-lg:       220px;  /* text-input demo width (wide)       */
+  --showcase-input-w-md:       200px;  /* text-input demo width (medium)     */
+  --showcase-input-w-sm:       190px;  /* password input demo width          */
+  --showcase-input-w-xs:       180px;  /* narrow input demo width            */
+  --showcase-input-w-2xs:      160px;  /* time-picker demo width             */
+  --showcase-input-w-3xs:      140px;  /* number-input demo width            */
+  --showcase-label-w:          56px;   /* alignment label width              */
+  --showcase-label-w-sm:       52px;   /* narrow alignment label width       */
+  --showcase-container-min-w:  600px;  /* wide demo container min-width      */
+  --showcase-scrollbar-thumb:  37%;    /* decorative scrollbar thumb height   */
+  --showcase-state-chip-col:   100px;  /* state-row chip column width         */
+  --table-checkbox-col-w:      40px;  /* table checkbox column width        */
+  --table-col-w-2xs:           100px; /* extra-narrow table column          */
+  --table-col-w-xs:            110px; /* narrow table column                */
+  --table-col-w-sm:            120px; /* small table column                 */
+  --table-col-w-ms:            140px; /* medium-small table column           */
+  --table-col-w-md:            160px; /* medium table column                */
+  --table-col-w-lg:            180px; /* wide table column                  */
+  --showcase-login-w:          420px;  /* login / auth form max-width        */
+  --showcase-drawer-w:         520px;  /* drawer / dialog panel width        */
+  --showcase-search-w:         280px;  /* toolbar search field width         */
+  --showcase-search-sm-w:      240px;  /* search bar demo sm width           */
+  --showcase-search-md-w:      300px;  /* search bar demo md width           */
+  --showcase-search-lg-w:      360px;  /* search bar demo lg width           */
+  --showcase-chart-donut-w:    260px;  /* donut chart demo width             */
+  --showcase-chart-donut-h:    160px;  /* donut chart demo height            */
+  --showcase-chart-mini-w:     180px;  /* mini bar chart demo width          */
+  --showcase-chart-mini-h:     100px;  /* mini bar chart demo height         */
+  --showcase-progress-h:       4px;    /* inline progress bar height         */
+  --watermark-color:           0 0 0;  /* watermark base RGB channels        */
+  --font-showcase-label-w:     140px;   /* typeface name label width          */
+  /* Inline micro divider */
+  --divider-inline-h:           20px;   /* vertical divider in toolbars       */
+
+
+  /* ── Calendar internal sizing ─────────────────────────────── */
+  --calendar-cell-size: 32px;   /* day cell width + height              */
+  --calendar-row-h:     28px;   /* day header row height                */
+
+
+  /* ── Logo / brand container ────────────────────────────────── */
+  --size-logo-container: 48px;   /* auth / onboarding brand icon box         */
+
+
+  /* ── Spinner sizes ─────────────────────────────────────────── */
+  --size-spinner-ring:   12px;   /* loading ring inside a button             */
+  --size-spinner-sm:     16px;   /* standalone sm spinner                    */
+  --size-spinner-md:     20px;   /* standalone md spinner (default)          */
+  --size-spinner-lg:     28px;   /* standalone lg spinner (large)            */
+
+
+  /* ── Skeleton text heights ─────────────────────────────────── */
+  --skeleton-text-h-sm:  10px;   /* small text skeleton line height          */
+  --skeleton-text-h-md:  14px;   /* medium text skeleton line height         */
+
+
+  /* ── Progress bar heights (per size) ──────────────────────── */
+  --progress-h-sm:     4px;   /* sm progress bar track height               */
+  --progress-h-md:     6px;   /* md progress bar track (= --progress-height) */
+  --progress-h-lg:     8px;   /* lg progress bar track height               */
+  --progress-default-w: 120px; /* inline progress fallback fixed width       */
+
+
+  /* ── Slider geometry ───────────────────────────────────────── */
+  --slider-container-h:  20px;   /* outer hit-area / positioning container  */
+  --slider-rail-h:        4px;   /* track rail thickness                    */
+  --slider-thumb-size:   16px;   /* draggable thumb circle diameter         */
+  --slider-mark-size:    6px;   /* tick-mark dot on the rail               */
+
+
+  /* ── Switch per-size geometry ──────────────────────────────── */
+  --switch-w-sm:    32px;   --switch-h-sm:  18px;   --switch-thumb-sm:  12px;
+  --switch-w-md:    40px;   --switch-h-md:  22px;   --switch-thumb-md:  16px;
+  --switch-w-lg:    48px;   --switch-h-lg:  26px;   --switch-thumb-lg:  20px;
+  --switch-gap:      3px;   /* (H - thumb) / 2 — same for all sizes */
+  /* Border for loading spinners */
+  --border-width-spinner: 1.5px;
+
+
+  /* ── Rate (star) icon sizes ────────────────────────────────── */
+  --rate-size-sm:   14px;
+  --rate-size-md:   18px;
+  --rate-size-lg:   22px;
+
+
+  /* ── QR code sizes ─────────────────────────────────────────── */
+  --qr-size-sm:    80px;
+  --qr-size-md:   120px;
+  --qr-size-lg:   160px;
+
+
+  /* ── Search bar ────────────────────────────────────────────── */
+  --search-bar-width:         280px;   /* default search bar width              */
+  --search-bar-width-compact: 240px;   /* compact / toolbar search bar width    */
+
+  /* ── Number spinner ──────────────────────────────────────── */
+  --number-spinner-width: 72px;   /* compact number spinner fixed width        */
+
+  /* ── Chart axis ──────────────────────────────────────────── */
+  --chart-axis-font-size: var(--font-size-chart);   /* 8px SVG axis text       */
+
+  /* ── Toggle (MolSize Figma-exact dimensions) ───────────────── */
+  --toggle-w-sm:  20px;  --toggle-h-sm:  12px;  --toggle-thumb-sm:   8px;  --toggle-offset-sm:  2px;
+  --toggle-w-md:  32px;  --toggle-h-md:  20px;  --toggle-thumb-md:  12px;  --toggle-offset-md:  4px;
+  --toggle-w-lg:  40px;  --toggle-h-lg:  24px;  --toggle-thumb-lg:  16px;  --toggle-offset-lg:  4px;
+
+
+  /* ── TextArea min-heights ──────────────────────────────── */
+  --textarea-min-h-sm: 56px;
+  --textarea-min-h-md: 76px;
+  --textarea-min-h-lg: 96px;
+
+
+  /* ── Tag padding ───────────────────────────────────────── */
+  --tag-padding-y:    var(--space-half);   /* 2px */
+  --tag-padding-x-sm: 6px;                /* compact tag inline padding */
+  --tag-padding-x-md: var(--space-2);     /* 8px  — default tag inline padding */
+
+
+  /* ── Timeline ──────────────────────────────────────────── */
+  --size-dot-timeline: 10px;   /* timeline event dot diameter */
+
+
+  /* ── Tooltip / popover offset ──────────────────────────── */
+  --tooltip-offset: var(--space-2);   /* 8px gap between trigger and float */
+
+
+  /* ── Collapse / accordion ──────────────────────────────── */
+  --collapse-content-max-h: 800px;   /* expanded panel max-height for transition */
+
+
+  /* ── Descriptions ──────────────────────────────────────── */
+  --desc-label-width: 160px;   /* horizontal descriptions label column width */
+
+
+  /* ── Color picker gradient ─────────────────────────────── */
+  --color-picker-width: 200px;   /* gradient canvas display width */
+
+
+  /* ── Toast loading track ───────────────────────────────── */
+  --toast-loading-track-h: 3px;   /* loading progress bar height in toast */
+
+
+  /* ── OTP cursor ────────────────────────────────────────── */
+  --otp-cursor-w: var(--border-width-medium);   /* 2px blinking cursor */
+
+
+  /* ── Scroll Area default ───────────────────────────────── */
+  --scroll-area-default-h: 180px;   /* ScrollArea default height */
+
+
+  /* ── Resizable panel ───────────────────────────────────── */
+  --resizable-default-w: 200px;   /* first panel default width */
+  --resizable-default-h: 100px;   /* first panel default height (vertical) */
+  --resizable-demo-h-sm: 120px;   /* horizontal demo min-height */
+  --resizable-demo-h-md: 140px;   /* vertical demo min-height */
+  --resizable-handle-size: var(--space-2);   /* 8px drag handle track */
+  --resizable-grip-short: 3px;   /* grip indicator short dimension */
+
+
+  /* ── Sheet ─────────────────────────────────────────────── */
+  --sheet-width: var(--toast-stack-width);   /* 360px side sheet width */
+
+
+  /* ── Navbar inline search ──────────────────────────────── */
+  --navbar-search-w: 200px;   /* top nav search bar compact width */
+
+
+  /* ── Templates ──────────────────────────────────────────── */
+  /* App shell */
+  --template-shell-bg:                var(--bg-secondary);
+  --template-shell-content-bg:        var(--bg-primary);
+  --template-shell-content-padding:   var(--page-content-padding);
+  --template-shell-content-max-w:     var(--layout-content-max);
+  --template-shell-content-radius:    var(--radius-md-ds);
+
+  /* Dashboard */
+  --template-dashboard-gap:           var(--space-6);
+  --template-dashboard-stats-gap:     var(--space-4);
+  --template-dashboard-grid-cols:     3;
+  --template-dashboard-panel-w:       320px;
+
+  /* Table page */
+  --template-table-toolbar-h:         var(--space-12);
+  --template-table-toolbar-gap:       var(--space-3);
+  --template-table-footer-h:          var(--space-12);
+
+  /* Form page */
+  --template-form-max-w:              640px;
+  --template-form-gap:                var(--form-group-gap);
+  --template-form-action-h:           var(--space-16);
+  --template-form-action-bg:          var(--bg-primary);
+  --template-form-action-border:      var(--border-default);
+  --template-form-action-shadow:      var(--shadow-sm);
+
+  /* Detail page */
+  --template-detail-hero-padding:     var(--space-8);
+  --template-detail-hero-bg:          var(--bg-primary);
+  --template-detail-sidebar-w:        320px;
+  --template-detail-tab-gap:          var(--tab-gap);
+
+  /* Empty state */
+  --template-empty-icon-size:         80px;
+  --template-empty-max-w:             420px;
+  --template-empty-gap:               var(--space-4);
+  --template-empty-illustration-bg:   var(--bg-secondary);
+  --template-empty-illustration-fg:   var(--fg-tertiary);
+}
